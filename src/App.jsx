@@ -82,17 +82,44 @@ import { useState } from "react"
 
 const App = ()=>{
 
-  let [todo , addTodo] = useState([])
+  let [todo , setTodo] = useState([])
 
   const todoVal = useRef()
  
-  const getTodo = (event)=>{
+  const addTodo = (event)=>{
     event.preventDefault();
-    todo.push(todoVal.current.value)
-    addTodo([...todo])
-    console.log(todo);
+    
+    if(!todoVal.current.value){
+      alert("enter todo")
+    }else{
+      todo.push(todoVal.current.value)
+      setTodo([...todo])
+      console.log(todo);
+      console.log("todo");
+      
+    }
+
     todoVal.current.value = ""
   }
+
+
+
+  const deleteBtn = (index)=>{
+    console.log("delete button");
+    todo.splice(index , 1)
+    setTodo([...todo])
+    
+  }
+
+  const editBtn = (index)=>{
+  // console.log("edit button");
+  const updateVal = prompt('enter your update todo');
+  todo.splice(index , 1 , updateVal);
+  setTodo([...todo])
+  
+  }
+
+  
 
   return (
     <>
@@ -101,9 +128,9 @@ const App = ()=>{
     
     {/* getitem  */}
 
-    <form onSubmit={getTodo}>  
+    <form onSubmit={addTodo}>  
     <input type="text" placeholder="enter todo" ref={todoVal} />
-    <button onClick={getTodo}>Add</button>
+    <button onClick={addTodo}>Add</button>
     </form>
     
 
@@ -113,9 +140,11 @@ const App = ()=>{
     <ul>
       {todo.map((item , index)=>{
         return (
-          <>
-          <li key={index}>{item}</li>
-          </>
+          <div key={index}>
+          <li >{item}</li>
+          <button onClick={()=> deleteBtn(index)}>Delete</button>
+          <button onClick={()=> editBtn(index)}>Edit</button>
+          </div>
         )
       })}
     </ul>
